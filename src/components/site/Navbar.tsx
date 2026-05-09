@@ -27,6 +27,7 @@ const links = [
 export function Navbar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { theme, toggle } = useTheme();
+  const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -61,9 +62,29 @@ export function Navbar() {
           <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
-          <Link to="/dashboard" className="hidden sm:block">
-            <Button className="rounded-full">Sign in</Button>
-          </Link>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="rounded-full">
+                  <UserIcon className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard">Dashboard</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={signOut} className="text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" /> Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/auth" className="hidden sm:block">
+              <Button className="rounded-full">Sign in</Button>
+            </Link>
+          )}
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen((o) => !o)}>
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
@@ -86,8 +107,8 @@ export function Navbar() {
                 {l.label}
               </Link>
             ))}
-            <Link to="/dashboard" onClick={() => setOpen(false)}>
-              <Button className="mt-2 w-full rounded-full">Sign in</Button>
+            <Link to={user ? "/dashboard" : "/auth"} onClick={() => setOpen(false)}>
+              <Button className="mt-2 w-full rounded-full">{user ? "Dashboard" : "Sign in"}</Button>
             </Link>
           </nav>
         </div>
