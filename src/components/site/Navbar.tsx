@@ -1,7 +1,16 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, Moon, Scale, Sun, X } from "lucide-react";
+import { LogOut, Menu, Moon, Scale, Sun, User as UserIcon, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
