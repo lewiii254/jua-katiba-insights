@@ -9,8 +9,50 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QuizzesRouteImport } from './routes/quizzes'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as IssuesRouteImport } from './routes/issues'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CountiesRouteImport } from './routes/counties'
+import { Route as ConstitutionRouteImport } from './routes/constitution'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const QuizzesRoute = QuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IssuesRoute = IssuesRouteImport.update({
+  id: '/issues',
+  path: '/issues',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CountiesRoute = CountiesRouteImport.update({
+  id: '/counties',
+  path: '/counties',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConstitutionRoute = ConstitutionRouteImport.update({
+  id: '/constitution',
+  path: '/constitution',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +61,130 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/constitution': typeof ConstitutionRoute
+  '/counties': typeof CountiesRoute
+  '/dashboard': typeof DashboardRoute
+  '/issues': typeof IssuesRoute
+  '/learn': typeof LearnRoute
+  '/quizzes': typeof QuizzesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/constitution': typeof ConstitutionRoute
+  '/counties': typeof CountiesRoute
+  '/dashboard': typeof DashboardRoute
+  '/issues': typeof IssuesRoute
+  '/learn': typeof LearnRoute
+  '/quizzes': typeof QuizzesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/constitution': typeof ConstitutionRoute
+  '/counties': typeof CountiesRoute
+  '/dashboard': typeof DashboardRoute
+  '/issues': typeof IssuesRoute
+  '/learn': typeof LearnRoute
+  '/quizzes': typeof QuizzesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/constitution'
+    | '/counties'
+    | '/dashboard'
+    | '/issues'
+    | '/learn'
+    | '/quizzes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/constitution'
+    | '/counties'
+    | '/dashboard'
+    | '/issues'
+    | '/learn'
+    | '/quizzes'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/constitution'
+    | '/counties'
+    | '/dashboard'
+    | '/issues'
+    | '/learn'
+    | '/quizzes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ConstitutionRoute: typeof ConstitutionRoute
+  CountiesRoute: typeof CountiesRoute
+  DashboardRoute: typeof DashboardRoute
+  IssuesRoute: typeof IssuesRoute
+  LearnRoute: typeof LearnRoute
+  QuizzesRoute: typeof QuizzesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/quizzes': {
+      id: '/quizzes'
+      path: '/quizzes'
+      fullPath: '/quizzes'
+      preLoaderRoute: typeof QuizzesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/issues': {
+      id: '/issues'
+      path: '/issues'
+      fullPath: '/issues'
+      preLoaderRoute: typeof IssuesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/counties': {
+      id: '/counties'
+      path: '/counties'
+      fullPath: '/counties'
+      preLoaderRoute: typeof CountiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/constitution': {
+      id: '/constitution'
+      path: '/constitution'
+      fullPath: '/constitution'
+      preLoaderRoute: typeof ConstitutionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +197,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ConstitutionRoute: ConstitutionRoute,
+  CountiesRoute: CountiesRoute,
+  DashboardRoute: DashboardRoute,
+  IssuesRoute: IssuesRoute,
+  LearnRoute: LearnRoute,
+  QuizzesRoute: QuizzesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
