@@ -190,10 +190,25 @@ function QuizzesPage() {
               <h2 className="mt-6 font-display text-3xl font-bold">
                 You scored {score} / {questions.length}
               </h2>
-              <p className="mt-2 text-muted-foreground">+{score * 20} XP earned · 7-day streak active</p>
-              <Button onClick={reset} className="mt-8 rounded-full" size="lg">
-                <RotateCcw className="mr-2 h-4 w-4" /> Try again
-              </Button>
+              <p className="mt-2 text-muted-foreground">
+                +{score * 20} XP {user ? "saved to your profile" : "(sign in to save)"}
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-2">
+                <Button onClick={reset} className="rounded-full" size="lg" variant="outline">
+                  <RotateCcw className="mr-2 h-4 w-4" /> Try again
+                </Button>
+                {user ? (
+                  <Link to="/dashboard">
+                    <Button className="rounded-full" size="lg">View dashboard</Button>
+                  </Link>
+                ) : (
+                  <Link to="/auth" search={{ redirect: "/quizzes" }}>
+                    <Button className="rounded-full" size="lg">
+                      <Lock className="mr-2 h-4 w-4" /> Sign in to save XP
+                    </Button>
+                  </Link>
+                )}
+              </div>
             </motion.div>
           )}
         </div>
