@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Award, BookOpen, Brain, Flame, Send, Sparkles, Target, TrendingUp } from "lucide-react";
@@ -6,8 +7,10 @@ import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — Jua Katiba" },
@@ -18,10 +21,35 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function Dashboard() {
+  const { user } = useAuth();
   const [msgs, setMsgs] = useState<{ role: "user" | "ai"; text: string }[]>([
     { role: "ai", text: "Habari! I'm your civic assistant. Ask me anything about the Constitution of Kenya." },
   ]);
   const [input, setInput] = useState("");
+
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("*").eq("id", user!.id).single();
+      return data;
+    },
+  });
+
+  const { data: attempts } = useQuery({
+    queryKey: ["attempts", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quiz_attempts")
+        .select("xp_earned,score,total")
+        .eq("user_id", user!.id);
+      return data ?? [];
+    },
+  });
+
+  const totalXp = (attempts ?? []).reduce((s, a) => s + (a.xp_earned ?? 0), 0);
+  const greetingName = profile?.display_name ?? user?.email?.split("@")[0] ?? "friend";
 
   const send = () => {
     if (!input.trim()) return;
@@ -44,17 +72,19 @@ function Dashboard() {
       <section className="border-b border-border/60 bg-hero-radial">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-12 sm:px-6 lg:px-8">
           <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Dashboard</div>
-          <h1 className="font-display text-3xl font-bold sm:text-4xl">Karibu, Wanjiku 👋</h1>
-          <p className="text-muted-foreground">You're on a 7-day streak. Keep it going!</p>
+          <h1 className="font-display text-3xl font-bold sm:text-4xl">Karibu, {greetingName} 👋</h1>
+          <p className="text-muted-foreground">
+            {profile?.streak ? `You're on a ${profile.streak}-day streak.` : "Take a quiz to start your streak."}
+          </p>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat icon={Flame} label="Streak" value="7 days" tone="from-flag-red to-rose-600" />
-          <Stat icon={TrendingUp} label="XP this week" value="1,240" tone="from-flag-green to-emerald-600" />
-          <Stat icon={BookOpen} label="Lessons done" value="18 / 120" tone="from-amber-500 to-gold" />
-          <Stat icon={Award} label="Badges" value="6" tone="from-indigo-500 to-flag-green" />
+          <Stat icon={Flame} label="Streak" value={`${profile?.streak ?? 0} days`} tone="from-flag-red to-rose-600" />
+          <Stat icon={TrendingUp} label="Total XP" value={totalXp.toLocaleString()} tone="from-flag-green to-emerald-600" />
+          <Stat icon={BookOpen} label="Quizzes" value={`${attempts?.length ?? 0}`} tone="from-amber-500 to-gold" />
+          <Stat icon={Award} label="Badges" value={`${Math.floor(totalXp / 200)}`} tone="from-indigo-500 to-flag-green" />
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">

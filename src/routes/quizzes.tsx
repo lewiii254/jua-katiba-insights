@@ -1,10 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, Flame, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
+import { CheckCircle2, Flame, Lock, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/quizzes")({
@@ -51,6 +54,7 @@ const questions = [
 ];
 
 function QuizzesPage() {
+  const { user } = useAuth();
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -65,9 +69,24 @@ function QuizzesPage() {
     if (n === q.answer) setScore((s) => s + 1);
   };
 
+  const finish = async (finalScore: number) => {
+    setDone(true);
+    if (!user) return;
+    const { error } = await supabase.from("quiz_attempts").insert({
+      user_id: user.id,
+      quiz_slug: "katiba-basics",
+      score: finalScore,
+      total: questions.length,
+      xp_earned: finalScore * 20,
+    });
+    if (error) toast.error("Couldn't save your score");
+    else toast.success(`+${finalScore * 20} XP saved to your profile!`);
+  };
+
   const next = () => {
-    if (i + 1 >= questions.length) setDone(true);
-    else {
+    if (i + 1 >= questions.length) {
+      finish(score);
+    } else {
       setI((x) => x + 1);
       setPicked(null);
     }
@@ -171,10 +190,25 @@ function QuizzesPage() {
               <h2 className="mt-6 font-display text-3xl font-bold">
                 You scored {score} / {questions.length}
               </h2>
-              <p className="mt-2 text-muted-foreground">+{score * 20} XP earned · 7-day streak active</p>
-              <Button onClick={reset} className="mt-8 rounded-full" size="lg">
-                <RotateCcw className="mr-2 h-4 w-4" /> Try again
-              </Button>
+              <p className="mt-2 text-muted-foreground">
+                +{score * 20} XP {user ? "saved to your profile" : "(sign in to save)"}
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-2">
+                <Button onClick={reset} className="rounded-full" size="lg" variant="outline">
+                  <RotateCcw className="mr-2 h-4 w-4" /> Try again
+                </Button>
+                {user ? (
+                  <Link to="/dashboard">
+                    <Button className="rounded-full" size="lg">View dashboard</Button>
+                  </Link>
+                ) : (
+                  <Link to="/auth" search={{ redirect: "/quizzes" }}>
+                    <Button className="rounded-full" size="lg">
+                      <Lock className="mr-2 h-4 w-4" /> Sign in to save XP
+                    </Button>
+                  </Link>
+                )}
+              </div>
             </motion.div>
           )}
         </div>

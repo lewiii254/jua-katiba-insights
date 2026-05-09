@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as QuizzesRouteImport } from './routes/quizzes'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IssuesRouteImport } from './routes/issues'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CountiesRouteImport } from './routes/counties'
 import { Route as ConstitutionRouteImport } from './routes/constitution'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const QuizzesRoute = QuizzesRouteImport.update({
   id: '/quizzes',
@@ -33,11 +35,6 @@ const IssuesRoute = IssuesRouteImport.update({
   path: '/issues',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CountiesRoute = CountiesRouteImport.update({
   id: '/counties',
   path: '/counties',
@@ -48,9 +45,18 @@ const ConstitutionRoute = ConstitutionRouteImport.update({
   path: '/constitution',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -58,77 +64,91 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/constitution': typeof ConstitutionRoute
   '/counties': typeof CountiesRoute
-  '/dashboard': typeof DashboardRoute
   '/issues': typeof IssuesRoute
   '/learn': typeof LearnRoute
   '/quizzes': typeof QuizzesRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/constitution': typeof ConstitutionRoute
   '/counties': typeof CountiesRoute
-  '/dashboard': typeof DashboardRoute
   '/issues': typeof IssuesRoute
   '/learn': typeof LearnRoute
   '/quizzes': typeof QuizzesRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/constitution': typeof ConstitutionRoute
   '/counties': typeof CountiesRoute
-  '/dashboard': typeof DashboardRoute
   '/issues': typeof IssuesRoute
   '/learn': typeof LearnRoute
   '/quizzes': typeof QuizzesRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/auth'
     | '/constitution'
     | '/counties'
-    | '/dashboard'
     | '/issues'
     | '/learn'
     | '/quizzes'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/auth'
     | '/constitution'
     | '/counties'
-    | '/dashboard'
     | '/issues'
     | '/learn'
     | '/quizzes'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
+    | '/auth'
     | '/constitution'
     | '/counties'
-    | '/dashboard'
     | '/issues'
     | '/learn'
     | '/quizzes'
+    | '/_authenticated/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRoute
   ConstitutionRoute: typeof ConstitutionRoute
   CountiesRoute: typeof CountiesRoute
-  DashboardRoute: typeof DashboardRoute
   IssuesRoute: typeof IssuesRoute
   LearnRoute: typeof LearnRoute
   QuizzesRoute: typeof QuizzesRoute
@@ -157,13 +177,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IssuesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/counties': {
       id: '/counties'
       path: '/counties'
@@ -178,11 +191,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConstitutionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -192,15 +219,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
   ConstitutionRoute: ConstitutionRoute,
   CountiesRoute: CountiesRoute,
-  DashboardRoute: DashboardRoute,
   IssuesRoute: IssuesRoute,
   LearnRoute: LearnRoute,
   QuizzesRoute: QuizzesRoute,
