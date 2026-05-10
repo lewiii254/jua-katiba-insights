@@ -223,10 +223,11 @@ function Dashboard() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && send()}
-                placeholder="Ask about any article…"
+                disabled={streaming}
+                placeholder={streaming ? "Thinking…" : "Ask about any article…"}
                 className="rounded-full"
               />
-              <Button onClick={send} size="icon" className="rounded-full">
+              <Button onClick={send} disabled={streaming || !input.trim()} size="icon" className="rounded-full">
                 <Send className="h-4 w-4" />
               </Button>
             </div>
