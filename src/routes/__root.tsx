@@ -79,10 +79,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "A modern civic education platform for every Kenyan. Learn the Constitution, your rights, devolution, and how to participate." },
       { name: "author", content: "Jua Katiba" },
       { property: "og:title", content: "Jua Katiba — Know Your Constitution" },
-      { property: "og:description", content: "Modern civic education for Kenya. Learn, quiz yourself, and engage with the Constitution of Kenya 2010." },
+      { property: "og:description", content: "A modern civic education platform for every Kenyan. Learn the Constitution, your rights, devolution, and how to participate." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Jua Katiba — Know Your Constitution" },
+      { name: "twitter:description", content: "A modern civic education platform for every Kenyan. Learn the Constitution, your rights, devolution, and how to participate." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/ODyYFgUcy8bzeqSm1sMbiPozeAE2/social-images/social-1778418288110-1000810944.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/ODyYFgUcy8bzeqSm1sMbiPozeAE2/social-images/social-1778418288110-1000810944.webp" },
     ],
     links: [
       {
