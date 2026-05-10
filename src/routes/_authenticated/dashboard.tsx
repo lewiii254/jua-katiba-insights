@@ -51,20 +51,82 @@ function Dashboard() {
   const totalXp = (attempts ?? []).reduce((s, a) => s + (a.xp_earned ?? 0), 0);
   const greetingName = profile?.display_name ?? user?.email?.split("@")[0] ?? "friend";
 
-  const send = () => {
-    if (!input.trim()) return;
+  const [streaming, setStreaming] = useState(false);
+
+  const send = async () => {
+    if (!input.trim() || streaming) return;
     const q = input.trim();
-    setMsgs((m) => [...m, { role: "user", text: q }]);
+    const history = [...msgs, { role: "user" as const, text: q }];
+    setMsgs([...history, { role: "ai", text: "" }]);
     setInput("");
-    setTimeout(() => {
-      setMsgs((m) => [
-        ...m,
-        {
-          role: "ai",
-          text: `Great question. In short: Article 1 of the Constitution affirms that "all sovereign power belongs to the people of Kenya". (Demo response — connect Lovable Cloud + AI to make me real.)`,
+    setStreaming(true);
+
+    try {
+      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/civic-chat`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-      ]);
-    }, 700);
+        body: JSON.stringify({
+          messages: history.map((m) => ({
+            role: m.role === "ai" ? "assistant" : "user",
+            content: m.text,
+          })),
+        }),
+      });
+
+      if (!res.ok || !res.body) {
+        const err = await res.json().catch(() => ({ error: "Request failed" }));
+        setMsgs((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { role: "ai", text: `⚠️ ${err.error ?? "Something went wrong."}` };
+          return copy;
+        });
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let acc = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const data = line.slice(6).trim();
+          if (data === "[DONE]") continue;
+          try {
+            const parsed = JSON.parse(data);
+            const delta = parsed.choices?.[0]?.delta?.content ?? "";
+            if (delta) {
+              acc += delta;
+              setMsgs((m) => {
+                const copy = [...m];
+                copy[copy.length - 1] = { role: "ai", text: acc };
+                return copy;
+              });
+            }
+          } catch {
+            // ignore partial
+          }
+        }
+      }
+    } catch (e) {
+      setMsgs((m) => {
+        const copy = [...m];
+        copy[copy.length - 1] = { role: "ai", text: `⚠️ ${(e as Error).message}` };
+        return copy;
+      });
+    } finally {
+      setStreaming(false);
+    }
   };
 
   return (
