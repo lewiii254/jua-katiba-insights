@@ -76,6 +76,7 @@ export type Database = {
       }
       quiz_attempts: {
         Row: {
+          attempt_id: string
           created_at: string
           id: string
           quiz_slug: string
@@ -85,6 +86,7 @@ export type Database = {
           xp_earned: number
         }
         Insert: {
+          attempt_id?: string
           created_at?: string
           id?: string
           quiz_slug: string
@@ -94,6 +96,7 @@ export type Database = {
           xp_earned?: number
         }
         Update: {
+          attempt_id?: string
           created_at?: string
           id?: string
           quiz_slug?: string

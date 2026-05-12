@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Flame, Lock, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
@@ -51,6 +51,36 @@ const questions = [
     answer: 1,
     explain: "Article 42 guarantees every person the right to a clean and healthy environment.",
   },
+  {
+    q: "Which body is responsible for conducting elections in Kenya?",
+    options: ["KNCHR", "IEBC", "EACC", "JSC"],
+    answer: 1,
+    explain: "The Independent Electoral and Boundaries Commission (IEBC) is established by Article 88.",
+  },
+  {
+    q: "What is the term limit of a Kenyan President?",
+    options: ["One 5-year term", "Two 5-year terms", "Two 4-year terms", "No limit"],
+    answer: 1,
+    explain: "Article 142: President serves a maximum of two five-year terms.",
+  },
+  {
+    q: "Which article guarantees freedom of expression?",
+    options: ["Article 27", "Article 33", "Article 43", "Article 50"],
+    answer: 1,
+    explain: "Article 33 protects freedom of expression, with limits on hate speech and incitement.",
+  },
+  {
+    q: "How many members make up a county assembly's elected ward representatives?",
+    options: ["Determined per county", "47", "290", "350"],
+    answer: 0,
+    explain: "Each county has wards delimited by IEBC; the number varies per county.",
+  },
+  {
+    q: "Which chapter of the Constitution covers Leadership and Integrity?",
+    options: ["Chapter 4", "Chapter 6", "Chapter 9", "Chapter 12"],
+    answer: 1,
+    explain: "Chapter 6 sets out leadership and integrity principles for state officers.",
+  },
 ];
 
 function QuizzesPage() {
@@ -59,6 +89,13 @@ function QuizzesPage() {
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
+  // Stable client-generated id makes saving the attempt idempotent — retries
+  // (network errors, double-click) will hit the unique (user_id, attempt_id)
+  // constraint and upsert instead of duplicating.
+  const attemptId = useMemo(
+    () => (typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
+    [done],
+  );
 
   const q = questions[i];
   const progress = ((i + (picked !== null ? 1 : 0)) / questions.length) * 100;
@@ -72,13 +109,17 @@ function QuizzesPage() {
   const finish = async (finalScore: number) => {
     setDone(true);
     if (!user) return;
-    const { error } = await supabase.from("quiz_attempts").insert({
-      user_id: user.id,
-      quiz_slug: "katiba-basics",
-      score: finalScore,
-      total: questions.length,
-      xp_earned: finalScore * 20,
-    });
+    const { error } = await supabase.from("quiz_attempts").upsert(
+      {
+        user_id: user.id,
+        attempt_id: attemptId,
+        quiz_slug: "katiba-basics",
+        score: finalScore,
+        total: questions.length,
+        xp_earned: finalScore * 20,
+      },
+      { onConflict: "user_id,attempt_id" },
+    );
     if (error) toast.error("Couldn't save your score");
     else toast.success(`+${finalScore * 20} XP saved to your profile!`);
   };

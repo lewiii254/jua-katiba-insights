@@ -42,13 +42,35 @@ function Dashboard() {
     queryFn: async () => {
       const { data } = await supabase
         .from("quiz_attempts")
-        .select("xp_earned,score,total")
-        .eq("user_id", user!.id);
+        .select("id,quiz_slug,score,total,xp_earned,created_at")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+  });
+
+  const { data: lessons } = useQuery({
+    queryKey: ["lessons", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("lesson_progress")
+        .select("lesson_slug,completed,progress,updated_at")
+        .eq("user_id", user!.id)
+        .order("updated_at", { ascending: false });
       return data ?? [];
     },
   });
 
   const totalXp = (attempts ?? []).reduce((s, a) => s + (a.xp_earned ?? 0), 0);
+  const lessonsDone = (lessons ?? []).filter((l) => l.completed).length;
+  const overallPct = lessons && lessons.length > 0
+    ? Math.round((lessonsDone / Math.max(lessons.length, 8)) * 100)
+    : 0;
+  const bestScore = (attempts ?? []).reduce(
+    (m, a) => Math.max(m, Math.round((a.score / Math.max(a.total, 1)) * 100)),
+    0,
+  );
   const greetingName = profile?.display_name ?? user?.email?.split("@")[0] ?? "friend";
 
   const [streaming, setStreaming] = useState(false);
@@ -146,7 +168,7 @@ function Dashboard() {
           <Stat icon={Flame} label="Streak" value={`${profile?.streak ?? 0} days`} tone="from-flag-red to-rose-600" />
           <Stat icon={TrendingUp} label="Total XP" value={totalXp.toLocaleString()} tone="from-flag-green to-emerald-600" />
           <Stat icon={BookOpen} label="Quizzes" value={`${attempts?.length ?? 0}`} tone="from-amber-500 to-gold" />
-          <Stat icon={Award} label="Badges" value={`${Math.floor(totalXp / 200)}`} tone="from-indigo-500 to-flag-green" />
+          <Stat icon={Award} label="Best Score" value={`${bestScore}%`} tone="from-indigo-500 to-flag-green" />
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -158,29 +180,62 @@ function Dashboard() {
           >
             <div className="flex items-center justify-between">
               <h2 className="font-display text-xl font-semibold">Your learning journey</h2>
-              <span className="text-sm text-muted-foreground">15% complete</span>
+              <span className="text-sm text-muted-foreground">{overallPct}% complete</span>
             </div>
-            <Progress value={15} className="mt-3 h-2" />
+            <Progress value={overallPct} className="mt-3 h-2" />
 
             <div className="mt-6 space-y-3">
-              {[
-                { title: "Bill of Rights · Equality", pct: 80 },
-                { title: "Devolution Foundations", pct: 45 },
-                { title: "Public Participation", pct: 20 },
-              ].map((c) => (
-                <div key={c.title} className="rounded-2xl border border-border p-4">
+              {(lessons ?? []).slice(0, 5).map((l) => (
+                <div key={l.lesson_slug} className="rounded-2xl border border-border p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="grid h-9 w-9 place-items-center rounded-xl bg-flag-green/10 text-flag-green">
                         <Target className="h-4 w-4" />
                       </div>
-                      <span className="font-medium">{c.title}</span>
+                      <span className="font-medium capitalize">{l.lesson_slug.replace(/-/g, " ")}</span>
                     </div>
-                    <span className="text-xs text-muted-foreground">{c.pct}%</span>
+                    <span className="text-xs text-muted-foreground">{l.completed ? "100%" : `${l.progress}%`}</span>
                   </div>
-                  <Progress value={c.pct} className="mt-3 h-1.5" />
+                  <Progress value={l.completed ? 100 : l.progress} className="mt-3 h-1.5" />
                 </div>
               ))}
+              {(!lessons || lessons.length === 0) && (
+                <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+                  No lessons yet — head to the Learn page to start a track.
+                </div>
+              )}
+            </div>
+
+            {/* Recent quiz attempts */}
+            <div className="mt-8">
+              <h3 className="font-display text-lg font-semibold">Recent quiz attempts</h3>
+              <div className="mt-3 space-y-2">
+                {(attempts ?? []).slice(0, 5).map((a) => {
+                  const pct = Math.round((a.score / Math.max(a.total, 1)) * 100);
+                  return (
+                    <div
+                      key={a.id}
+                      className="flex items-center justify-between rounded-xl border border-border bg-background/50 px-4 py-3 text-sm"
+                    >
+                      <div>
+                        <div className="font-medium capitalize">{a.quiz_slug.replace(/-/g, " ")}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(a.created_at).toLocaleDateString()} · {a.score}/{a.total}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-semibold text-flag-green">+{a.xp_earned} XP</span>
+                        <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium">{pct}%</span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {(!attempts || attempts.length === 0) && (
+                  <div className="rounded-xl border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+                    Take your first quiz to see results here.
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
 
