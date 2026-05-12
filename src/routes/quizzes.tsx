@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Flame, Lock, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
