@@ -89,6 +89,13 @@ function QuizzesPage() {
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
+  // Stable client-generated id makes saving the attempt idempotent — retries
+  // (network errors, double-click) will hit the unique (user_id, attempt_id)
+  // constraint and upsert instead of duplicating.
+  const attemptId = useMemo(
+    () => (typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
+    [done],
+  );
 
   const q = questions[i];
   const progress = ((i + (picked !== null ? 1 : 0)) / questions.length) * 100;
@@ -102,13 +109,17 @@ function QuizzesPage() {
   const finish = async (finalScore: number) => {
     setDone(true);
     if (!user) return;
-    const { error } = await supabase.from("quiz_attempts").insert({
-      user_id: user.id,
-      quiz_slug: "katiba-basics",
-      score: finalScore,
-      total: questions.length,
-      xp_earned: finalScore * 20,
-    });
+    const { error } = await supabase.from("quiz_attempts").upsert(
+      {
+        user_id: user.id,
+        attempt_id: attemptId,
+        quiz_slug: "katiba-basics",
+        score: finalScore,
+        total: questions.length,
+        xp_earned: finalScore * 20,
+      },
+      { onConflict: "user_id,attempt_id" },
+    );
     if (error) toast.error("Couldn't save your score");
     else toast.success(`+${finalScore * 20} XP saved to your profile!`);
   };
