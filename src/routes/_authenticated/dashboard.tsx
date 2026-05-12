@@ -42,13 +42,35 @@ function Dashboard() {
     queryFn: async () => {
       const { data } = await supabase
         .from("quiz_attempts")
-        .select("xp_earned,score,total")
-        .eq("user_id", user!.id);
+        .select("id,quiz_slug,score,total,xp_earned,created_at")
+        .eq("user_id", user!.id)
+        .order("created_at", { ascending: false });
+      return data ?? [];
+    },
+  });
+
+  const { data: lessons } = useQuery({
+    queryKey: ["lessons", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("lesson_progress")
+        .select("lesson_slug,completed,progress,updated_at")
+        .eq("user_id", user!.id)
+        .order("updated_at", { ascending: false });
       return data ?? [];
     },
   });
 
   const totalXp = (attempts ?? []).reduce((s, a) => s + (a.xp_earned ?? 0), 0);
+  const lessonsDone = (lessons ?? []).filter((l) => l.completed).length;
+  const overallPct = lessons && lessons.length > 0
+    ? Math.round((lessonsDone / Math.max(lessons.length, 8)) * 100)
+    : 0;
+  const bestScore = (attempts ?? []).reduce(
+    (m, a) => Math.max(m, Math.round((a.score / Math.max(a.total, 1)) * 100)),
+    0,
+  );
   const greetingName = profile?.display_name ?? user?.email?.split("@")[0] ?? "friend";
 
   const [streaming, setStreaming] = useState(false);
