@@ -51,6 +51,36 @@ const questions = [
     answer: 1,
     explain: "Article 42 guarantees every person the right to a clean and healthy environment.",
   },
+  {
+    q: "Which body is responsible for conducting elections in Kenya?",
+    options: ["KNCHR", "IEBC", "EACC", "JSC"],
+    answer: 1,
+    explain: "The Independent Electoral and Boundaries Commission (IEBC) is established by Article 88.",
+  },
+  {
+    q: "What is the term limit of a Kenyan President?",
+    options: ["One 5-year term", "Two 5-year terms", "Two 4-year terms", "No limit"],
+    answer: 1,
+    explain: "Article 142: President serves a maximum of two five-year terms.",
+  },
+  {
+    q: "Which article guarantees freedom of expression?",
+    options: ["Article 27", "Article 33", "Article 43", "Article 50"],
+    answer: 1,
+    explain: "Article 33 protects freedom of expression, with limits on hate speech and incitement.",
+  },
+  {
+    q: "How many members make up a county assembly's elected ward representatives?",
+    options: ["Determined per county", "47", "290", "350"],
+    answer: 0,
+    explain: "Each county has wards delimited by IEBC; the number varies per county.",
+  },
+  {
+    q: "Which chapter of the Constitution covers Leadership and Integrity?",
+    options: ["Chapter 4", "Chapter 6", "Chapter 9", "Chapter 12"],
+    answer: 1,
+    explain: "Chapter 6 sets out leadership and integrity principles for state officers.",
+  },
 ];
 
 function QuizzesPage() {
