@@ -249,25 +249,7 @@ function QuizzesPage() {
                   transition={{ duration: 0.25 }}
                   className="mt-8"
                 >
-              <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span className="inline-flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-gold" /> Question {i + 1} of {questions.length}
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Flame className="h-4 w-4 text-flag-red" /> {score * 20} XP
-                </span>
-              </div>
-              <Progress value={progress} className="mt-3 h-2" />
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.25 }}
-                  className="mt-8"
-                >
                   <h2 className="font-display text-2xl font-semibold sm:text-3xl">{q.q}</h2>
                   <div className="mt-6 grid gap-3">
                     {q.options.map((opt, idx) => {
