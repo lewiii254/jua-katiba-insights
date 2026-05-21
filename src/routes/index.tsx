@@ -74,10 +74,18 @@ const trending = [
   "Digital Rights",
 ];
 
+const civicPulse = [
+  { icon: Vote, label: "Youth voices", metric: "42 county forums this week" },
+  { icon: Globe2, label: "Policy watch", metric: "18 active civic debates" },
+  { icon: Trophy, label: "Learning streaks", metric: "2,300 learners on fire" },
+  { icon: Flame, label: "Daily challenge", metric: "Day 22 opened by 8,400 users" },
+];
+
 function Home() {
   return (
     <SiteShell>
       <Hero />
+      <CivicPulse />
       <Stats />
       <FeaturedLessons />
       <HowItWorks />
@@ -197,6 +205,8 @@ function Testimonials() {
 function Hero() {
   return (
     <section className="relative overflow-hidden bg-hero-radial">
+      <div className="pointer-events-none absolute -left-28 top-10 h-56 w-56 rounded-full bg-flag-green/20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 h-64 w-64 rounded-full bg-gold/20 blur-3xl" />
       <div className="absolute inset-0 pattern-kente opacity-[0.06]" />
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:px-8 lg:py-28">
         <motion.div
@@ -207,7 +217,7 @@ function Hero() {
         >
           <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            Civic education for the next generation
+            Civic education with energy and clarity
           </span>
           <h1 className="mt-5 font-display text-5xl font-bold leading-[1.05] text-balance sm:text-6xl lg:text-7xl">
             Know your <span className="text-gradient">Katiba</span>.<br />
@@ -233,6 +243,19 @@ function Hero() {
             <Badge text="Free forever" />
             <Badge text="Mobile-first" />
             <Badge text="Built in 🇰🇪" />
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {["Fast lessons", "Interactive quizzes", "Real civic impact"].map((chip, i) => (
+              <motion.span
+                key={chip}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.25 + i * 0.08 }}
+                className="rounded-full border border-border bg-card/80 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur"
+              >
+                {chip}
+              </motion.span>
+            ))}
           </div>
         </motion.div>
 
@@ -285,6 +308,40 @@ function Hero() {
   );
 }
 
+function CivicPulse() {
+  return (
+    <section className="border-y border-border/60 bg-card/70">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-flag-green">
+          <Sparkles className="h-3.5 w-3.5" /> Live civic pulse
+        </div>
+        <div className="overflow-hidden">
+          <motion.div
+            className="flex w-max gap-3"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 24, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
+          >
+            {[...civicPulse, ...civicPulse].map((item, i) => (
+              <div
+                key={`${item.label}-${i}`}
+                className="flex min-w-[250px] items-center gap-3 rounded-2xl border border-border bg-background/80 px-4 py-3 backdrop-blur"
+              >
+                <div className="grid h-8 w-8 place-items-center rounded-xl bg-flag-green/10 text-flag-green">
+                  <item.icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold">{item.label}</div>
+                  <div className="text-xs text-muted-foreground">{item.metric}</div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Badge({ text }: { text: string }) {
   return (
     <span className="inline-flex items-center gap-1.5">
@@ -312,8 +369,11 @@ function FloatingCard({
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay }}
+      animate={{ opacity: 1, y: [0, -6, 0] }}
+      transition={{
+        opacity: { duration: 0.6, delay },
+        y: { duration: 4, delay: delay + 0.4, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" },
+      }}
       className={`absolute z-10 flex items-center gap-3 rounded-2xl border border-border bg-card/95 p-3 pr-5 shadow-glow backdrop-blur ${className}`}
     >
       <div

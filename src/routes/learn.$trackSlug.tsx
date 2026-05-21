@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { findTrack, type Lesson, type LessonSection, type Track } from "@/data/learn-content";
+import { findTrack, type Lesson, type LessonSection } from "@/data/learn-content";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -16,17 +16,24 @@ export const Route = createFileRoute("/learn/$trackSlug")({
   loader: ({ params }) => {
     const track = findTrack(params.trackSlug);
     if (!track) throw notFound();
-    return { track };
+    return { trackSlug: params.trackSlug };
   },
   head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.track.title} — Learn — Jua Katiba` },
-          { name: "description", content: loaderData.track.desc },
-          { property: "og:title", content: `${loaderData.track.title} — Jua Katiba` },
-          { property: "og:description", content: loaderData.track.desc },
-        ]
-      : [],
+    meta: (() => {
+      const track = loaderData ? findTrack(loaderData.trackSlug) : undefined;
+      if (!track) {
+        return [
+          { title: "Learn — Jua Katiba" },
+          { name: "description", content: "Explore civic learning tracks and lessons." },
+        ];
+      }
+      return [
+        { title: `${track.title} — Learn — Jua Katiba` },
+        { name: "description", content: track.desc },
+        { property: "og:title", content: `${track.title} — Jua Katiba` },
+        { property: "og:description", content: track.desc },
+      ];
+    })(),
   }),
   notFoundComponent: () => (
     <SiteShell>
@@ -43,7 +50,9 @@ export const Route = createFileRoute("/learn/$trackSlug")({
 });
 
 function TrackDetailPage() {
-  const { track } = Route.useLoaderData() as { track: Track };
+  const { trackSlug } = Route.useParams();
+  const track = findTrack(trackSlug);
+  if (!track) throw notFound();
   const { user } = useAuth();
   const qc = useQueryClient();
   const [open, setOpen] = useState<Record<string, Set<number>>>({});
