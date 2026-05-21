@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Sparkles, Trophy } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
@@ -82,8 +82,9 @@ function LearnPage() {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
                 whileHover={{ y: -4 }}
               >
-                <a
-                  href={`/learn/${t.slug}`}
+                <Link
+                  to="/learn/$trackSlug"
+                  params={{ trackSlug: t.slug }}
                   className="group flex h-full flex-col rounded-3xl border border-border bg-card p-6 text-left card-elevated"
                 >
                   <div className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${t.color} text-white shadow-lg`}>
@@ -102,7 +103,7 @@ function LearnPage() {
                     </div>
                     {pct > 0 && <Progress value={pct} className="mt-3 h-1.5" />}
                   </div>
-                </a>
+                </Link>
               </motion.div>
             );
           })}
