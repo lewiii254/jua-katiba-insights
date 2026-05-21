@@ -17,6 +17,7 @@ import { Route as ConstitutionRouteImport } from './routes/constitution'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as TrackSlugRouteImport } from './routes/$trackSlug'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnTrackSlugRouteImport } from './routes/learn.$trackSlug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -61,6 +62,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrackSlugRoute = TrackSlugRouteImport.update({
+  id: '/$trackSlug',
+  path: '/$trackSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -84,6 +90,7 @@ const QuizzesDayDayRoute = QuizzesDayDayRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$trackSlug': typeof TrackSlugRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/constitution': typeof ConstitutionRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$trackSlug': typeof TrackSlugRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/constitution': typeof ConstitutionRoute
@@ -111,6 +119,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$trackSlug': typeof TrackSlugRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$trackSlug'
     | '/about'
     | '/auth'
     | '/constitution'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$trackSlug'
     | '/about'
     | '/auth'
     | '/constitution'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$trackSlug'
     | '/_authenticated'
     | '/about'
     | '/auth'
@@ -168,6 +180,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TrackSlugRoute: typeof TrackSlugRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
@@ -236,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$trackSlug': {
+      id: '/$trackSlug'
+      path: '/$trackSlug'
+      fullPath: '/$trackSlug'
+      preLoaderRoute: typeof TrackSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -302,6 +322,7 @@ const QuizzesRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TrackSlugRoute: TrackSlugRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
