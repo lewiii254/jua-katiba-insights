@@ -163,19 +163,92 @@ function QuizzesPage() {
   return (
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Civic Quizzes</div>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">Test your Katiba IQ</h1>
           <p className="mt-3 max-w-xl text-muted-foreground">
-            Earn XP, build streaks, climb the leaderboard.
+            Take the 30-day civic challenge or jump into a classic quiz. Earn XP, build streaks, and learn something new every day.
           </p>
         </div>
       </section>
 
+      {/* 30-Day Challenge */}
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-flag-green/10 px-3 py-1 text-xs font-semibold text-flag-green">
+              <Calendar className="h-3.5 w-3.5" /> 30-Day Civic Challenge
+            </div>
+            <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">A month of Katiba, one day at a time</h2>
+            <p className="mt-1 text-sm text-muted-foreground">5 questions per day · up to 100 XP daily · 3,000 XP total.</p>
+          </div>
+          {user && completedDays && (
+            <div className="hidden text-right sm:block">
+              <div className="font-display text-2xl font-bold text-flag-green">{completedDays.size}/30</div>
+              <div className="text-xs text-muted-foreground">days attempted</div>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6">
+          {dailyQuizzes.map((d) => {
+            const pct = completedDays?.get(d.day);
+            return (
+              <Link
+                key={d.day}
+                to="/quizzes/day/$day"
+                params={{ day: String(d.day) }}
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all hover:border-flag-green hover:shadow-glow"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-xs font-bold text-muted-foreground">DAY {d.day}</span>
+                  {pct !== undefined && (
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+                        pct >= 80 ? "bg-flag-green/15 text-flag-green" : "bg-amber-500/15 text-amber-700",
+                      )}
+                    >
+                      {pct}%
+                    </span>
+                  )}
+                </div>
+                <div className="mt-2 font-display text-sm font-semibold leading-snug">{d.theme}</div>
+                <div className="mt-3 text-[11px] text-muted-foreground">{d.questions.length} Qs</div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Classic Quiz */}
       <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-red">Classic quiz</div>
+          <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Katiba basics — 10 questions</h2>
+        </div>
         <div className="rounded-3xl border border-border bg-card p-6 card-elevated sm:p-10">
           {!done ? (
             <>
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span className="inline-flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-gold" /> Question {i + 1} of {questions.length}
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-flag-red" /> {score * 20} XP
+                </span>
+              </div>
+              <Progress value={progress} className="mt-3 h-2" />
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.25 }}
+                  className="mt-8"
+                >
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span className="inline-flex items-center gap-2">
                   <Zap className="h-4 w-4 text-gold" /> Question {i + 1} of {questions.length}
