@@ -91,13 +91,31 @@ function QuizzesPage() {
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  // Stable client-generated id makes saving the attempt idempotent — retries
-  // (network errors, double-click) will hit the unique (user_id, attempt_id)
-  // constraint and upsert instead of duplicating.
   const attemptId = useMemo(
     () => (typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
     [done],
   );
+
+  const { data: completedDays } = useQuery({
+    queryKey: ["completed-days", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quiz_attempts")
+        .select("quiz_slug,score,total")
+        .eq("user_id", user!.id)
+        .like("quiz_slug", "daily-day-%");
+      const map = new Map<number, number>();
+      for (const a of data ?? []) {
+        const m = a.quiz_slug.match(/^daily-day-(\d+)$/);
+        if (!m) continue;
+        const day = Number(m[1]);
+        const pct = Math.round((a.score / Math.max(a.total, 1)) * 100);
+        map.set(day, Math.max(map.get(day) ?? 0, pct));
+      }
+      return map;
+    },
+  });
 
   const q = questions[i];
   const progress = ((i + (picked !== null ? 1 : 0)) / questions.length) * 100;
