@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { findTrack } from "@/data/learn-content";
+import { findTrack, type Lesson, type LessonSection, type Track } from "@/data/learn-content";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/learn/$trackSlug")({
 });
 
 function TrackDetailPage() {
-  const { track } = Route.useLoaderData();
+  const { track } = Route.useLoaderData() as { track: Track };
   const { user } = useAuth();
   const qc = useQueryClient();
   const [open, setOpen] = useState<Record<string, Set<number>>>({});
@@ -86,7 +86,7 @@ function TrackDetailPage() {
     });
   };
 
-  const done = track.lessons.filter((l) => progress?.get(l.slug)?.completed).length;
+  const done = track.lessons.filter((l: Lesson) => progress?.get(l.slug)?.completed).length;
   const pct = Math.round((done / track.lessons.length) * 100);
 
   return (
@@ -139,7 +139,7 @@ function TrackDetailPage() {
 
       <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-6">
-          {track.lessons.map((lesson, idx) => {
+          {track.lessons.map((lesson: Lesson, idx: number) => {
             const p = progress?.get(lesson.slug);
             const isDone = !!p?.completed;
             const openSet = open[lesson.slug] ?? new Set<number>();
@@ -170,7 +170,7 @@ function TrackDetailPage() {
                           <Clock className="h-3 w-3" /> {lesson.duration}
                         </span>
                         <span className="rounded-full bg-muted px-2.5 py-1">{lesson.level}</span>
-                        {lesson.articles.map((a) => (
+                        {lesson.articles.map((a: string) => (
                           <span key={a} className="rounded-full bg-flag-green/10 px-2.5 py-1 font-medium text-flag-green">
                             {a}
                           </span>
@@ -186,7 +186,7 @@ function TrackDetailPage() {
                 </header>
 
                 <div className="divide-y divide-border/60">
-                  {lesson.sections.map((section, sIdx) => {
+                  {lesson.sections.map((section: LessonSection, sIdx: number) => {
                     const isOpen = openSet.has(sIdx);
                     return (
                       <div key={sIdx}>
@@ -222,7 +222,7 @@ function TrackDetailPage() {
                 <div className="border-t border-border/60 bg-muted/30 p-6 sm:p-8">
                   <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Key takeaways</div>
                   <ul className="mt-3 space-y-2 text-sm">
-                    {lesson.takeaways.map((t) => (
+                    {lesson.takeaways.map((t: string) => (
                       <li key={t} className="flex items-start gap-2.5">
                         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-flag-green" />
                         <span>{t}</span>

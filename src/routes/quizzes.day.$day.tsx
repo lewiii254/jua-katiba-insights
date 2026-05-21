@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { dailyQuizzes, findDailyQuiz } from "@/data/daily-quizzes";
+import { dailyQuizzes, findDailyQuiz, type DailyQuiz } from "@/data/daily-quizzes";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -41,7 +41,7 @@ export const Route = createFileRoute("/quizzes/day/$day")({
 });
 
 function DailyQuizPage() {
-  const { quiz } = Route.useLoaderData();
+  const { quiz } = Route.useLoaderData() as { quiz: DailyQuiz };
   const { user } = useAuth();
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -138,7 +138,7 @@ function DailyQuizPage() {
                 >
                   <h2 className="font-display text-2xl font-semibold sm:text-3xl">{q.q}</h2>
                   <div className="mt-6 grid gap-3">
-                    {q.options.map((opt, idx) => {
+                    {q.options.map((opt: string, idx: number) => {
                       const isCorrect = picked !== null && idx === q.answer;
                       const isWrong = picked === idx && idx !== q.answer;
                       return (
