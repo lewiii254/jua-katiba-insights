@@ -50,6 +50,18 @@ function AboutPage() {
           </motion.div>
         ))}
       </section>
+
+      <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-border bg-card p-8 card-elevated">
+          <h2 className="font-display text-2xl font-bold">Built by the Developer</h2>
+          <p className="mt-3 text-muted-foreground">
+            Jua Katiba is built and maintained by <strong>Marklewis Mutugi</strong> (<a href="https://github.com/lewiii254" target="_blank" rel="noreferrer" className="text-flag-green underline underline-offset-4">lewiii254</a>), a Software Engineer, Full Stack Developer, and Tech Educator based in Kenya.
+          </p>
+          <p className="mt-4 text-muted-foreground">
+            If this project helps you and you would like to support or appreciate the work, you can send support via <strong>M-Pesa: 0741303497</strong>.
+          </p>
+        </div>
+      </section>
     </SiteShell>
   );
 }
