@@ -80,11 +80,117 @@ function Home() {
       <Hero />
       <Stats />
       <FeaturedLessons />
+      <HowItWorks />
       <ConstitutionHighlights />
+      <DailyChallengeTeaser />
+      <Testimonials />
       <DailyFact />
       <Trending />
       <CTA />
     </SiteShell>
+  );
+}
+
+function HowItWorks() {
+  const steps = [
+    { n: "01", title: "Learn", text: "Pick a track. Each lesson has expandable sections, real-world examples and key takeaways." },
+    { n: "02", title: "Practice", text: "Take the 30-day civic challenge — 5 questions a day, themed by topic. Streaks unlock XP." },
+    { n: "03", title: "Act", text: "Use the toolkit: petition templates, county budget timelines, public participation guides." },
+  ];
+  return (
+    <Section eyebrow="How it works" title="From confused citizen to confident participant" desc="Three steps, no jargon, built for daily use.">
+      <div className="grid gap-5 md:grid-cols-3">
+        {steps.map((s, i) => (
+          <motion.div
+            key={s.n}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.08 }}
+            className="relative overflow-hidden rounded-3xl border border-border bg-card p-7"
+          >
+            <div className="font-display text-6xl font-bold text-gradient">{s.n}</div>
+            <h3 className="mt-3 font-display text-xl font-semibold">{s.title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{s.text}</p>
+          </motion.div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function DailyChallengeTeaser() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[2rem] border border-border bg-card p-8 sm:p-12"
+      >
+        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-flag-green/15 blur-3xl" />
+        <div className="relative grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-flag-green/10 px-3 py-1 text-xs font-semibold text-flag-green">
+              <Sparkles className="h-3.5 w-3.5" /> New · 30-Day Civic Challenge
+            </div>
+            <h3 className="mt-4 font-display text-3xl font-bold sm:text-4xl">A month of Katiba, one day at a time.</h3>
+            <p className="mt-3 max-w-xl text-muted-foreground">
+              30 themed days. 150 questions. Sovereignty, devolution, the Bill of Rights, public finance, public participation — covered.
+              Earn up to 3,000 XP and finish the month genuinely informed.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link to="/quizzes/day/$day" params={{ day: "1" }}>
+                <Button size="lg" className="rounded-full px-6">Start Day 1 <ArrowRight className="ml-1 h-4 w-4" /></Button>
+              </Link>
+              <Link to="/quizzes">
+                <Button size="lg" variant="outline" className="rounded-full px-6">See all 30 days</Button>
+              </Link>
+            </div>
+          </div>
+          <div className="grid grid-cols-6 gap-1.5 sm:gap-2">
+            {Array.from({ length: 30 }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square rounded-lg border border-border bg-background/50 text-center text-[10px] font-bold leading-[1.6rem] text-muted-foreground sm:leading-[2rem]"
+              >
+                {i + 1}
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  const quotes = [
+    { name: "Wanjiru, 22", role: "University student, Nairobi", text: "I'd read Article 43 a hundred times in class. Five minutes here and I finally got what 'progressive realisation' means." },
+    { name: "Otieno, 34", role: "Boda boda rider, Kisumu", text: "I knew I had rights when arrested. I didn't know I had to be in court within 24 hours. That changed how I move." },
+    { name: "Achieng, 41", role: "Public participation officer", text: "I use the toolkit lessons in my ward forums. People show up better prepared. The county budget hearings improved." },
+  ];
+  return (
+    <Section eyebrow="What learners say" title="Built for Kenyans, by the questions Kenyans actually ask" desc="Plain language, real cases, no political angle.">
+      <div className="grid gap-5 md:grid-cols-3">
+        {quotes.map((q, i) => (
+          <motion.figure
+            key={q.name}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: i * 0.07 }}
+            className="flex flex-col rounded-3xl border border-border bg-card p-6"
+          >
+            <blockquote className="font-display text-lg leading-snug">"{q.text}"</blockquote>
+            <figcaption className="mt-auto pt-5 text-sm">
+              <div className="font-semibold">{q.name}</div>
+              <div className="text-muted-foreground">{q.role}</div>
+            </figcaption>
+          </motion.figure>
+        ))}
+      </div>
+    </Section>
   );
 }
 
