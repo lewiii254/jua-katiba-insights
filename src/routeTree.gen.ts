@@ -18,7 +18,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LearnTrackSlugRouteImport } from './routes/learn.$trackSlug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as QuizzesDayDayRouteImport } from './routes/quizzes.day.$day'
 
 const QuizzesRoute = QuizzesRouteImport.update({
   id: '/quizzes',
@@ -64,10 +66,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnTrackSlugRoute = LearnTrackSlugRouteImport.update({
+  id: '/$trackSlug',
+  path: '/$trackSlug',
+  getParentRoute: () => LearnRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const QuizzesDayDayRoute = QuizzesDayDayRouteImport.update({
+  id: '/day/$day',
+  path: '/day/$day',
+  getParentRoute: () => QuizzesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -77,9 +89,11 @@ export interface FileRoutesByFullPath {
   '/constitution': typeof ConstitutionRoute
   '/counties': typeof CountiesRoute
   '/issues': typeof IssuesRoute
-  '/learn': typeof LearnRoute
-  '/quizzes': typeof QuizzesRoute
+  '/learn': typeof LearnRouteWithChildren
+  '/quizzes': typeof QuizzesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/learn/$trackSlug': typeof LearnTrackSlugRoute
+  '/quizzes/day/$day': typeof QuizzesDayDayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -88,9 +102,11 @@ export interface FileRoutesByTo {
   '/constitution': typeof ConstitutionRoute
   '/counties': typeof CountiesRoute
   '/issues': typeof IssuesRoute
-  '/learn': typeof LearnRoute
-  '/quizzes': typeof QuizzesRoute
+  '/learn': typeof LearnRouteWithChildren
+  '/quizzes': typeof QuizzesRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/learn/$trackSlug': typeof LearnTrackSlugRoute
+  '/quizzes/day/$day': typeof QuizzesDayDayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,9 +117,11 @@ export interface FileRoutesById {
   '/constitution': typeof ConstitutionRoute
   '/counties': typeof CountiesRoute
   '/issues': typeof IssuesRoute
-  '/learn': typeof LearnRoute
-  '/quizzes': typeof QuizzesRoute
+  '/learn': typeof LearnRouteWithChildren
+  '/quizzes': typeof QuizzesRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/learn/$trackSlug': typeof LearnTrackSlugRoute
+  '/quizzes/day/$day': typeof QuizzesDayDayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +135,8 @@ export interface FileRouteTypes {
     | '/learn'
     | '/quizzes'
     | '/dashboard'
+    | '/learn/$trackSlug'
+    | '/quizzes/day/$day'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +148,8 @@ export interface FileRouteTypes {
     | '/learn'
     | '/quizzes'
     | '/dashboard'
+    | '/learn/$trackSlug'
+    | '/quizzes/day/$day'
   id:
     | '__root__'
     | '/'
@@ -140,6 +162,8 @@ export interface FileRouteTypes {
     | '/learn'
     | '/quizzes'
     | '/_authenticated/dashboard'
+    | '/learn/$trackSlug'
+    | '/quizzes/day/$day'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -150,8 +174,8 @@ export interface RootRouteChildren {
   ConstitutionRoute: typeof ConstitutionRoute
   CountiesRoute: typeof CountiesRoute
   IssuesRoute: typeof IssuesRoute
-  LearnRoute: typeof LearnRoute
-  QuizzesRoute: typeof QuizzesRoute
+  LearnRoute: typeof LearnRouteWithChildren
+  QuizzesRoute: typeof QuizzesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -219,12 +243,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/$trackSlug': {
+      id: '/learn/$trackSlug'
+      path: '/$trackSlug'
+      fullPath: '/learn/$trackSlug'
+      preLoaderRoute: typeof LearnTrackSlugRouteImport
+      parentRoute: typeof LearnRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/quizzes/day/$day': {
+      id: '/quizzes/day/$day'
+      path: '/day/$day'
+      fullPath: '/quizzes/day/$day'
+      preLoaderRoute: typeof QuizzesDayDayRouteImport
+      parentRoute: typeof QuizzesRoute
     }
   }
 }
@@ -241,6 +279,27 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface LearnRouteChildren {
+  LearnTrackSlugRoute: typeof LearnTrackSlugRoute
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnTrackSlugRoute: LearnTrackSlugRoute,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
+
+interface QuizzesRouteChildren {
+  QuizzesDayDayRoute: typeof QuizzesDayDayRoute
+}
+
+const QuizzesRouteChildren: QuizzesRouteChildren = {
+  QuizzesDayDayRoute: QuizzesDayDayRoute,
+}
+
+const QuizzesRouteWithChildren =
+  QuizzesRoute._addFileChildren(QuizzesRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
@@ -249,8 +308,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConstitutionRoute: ConstitutionRoute,
   CountiesRoute: CountiesRoute,
   IssuesRoute: IssuesRoute,
-  LearnRoute: LearnRoute,
-  QuizzesRoute: QuizzesRoute,
+  LearnRoute: LearnRouteWithChildren,
+  QuizzesRoute: QuizzesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,11 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, Flame, Lock, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
+import { Calendar, CheckCircle2, Flame, Lock, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { dailyQuizzes } from "@/data/daily-quizzes";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
@@ -89,13 +91,31 @@ function QuizzesPage() {
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  // Stable client-generated id makes saving the attempt idempotent — retries
-  // (network errors, double-click) will hit the unique (user_id, attempt_id)
-  // constraint and upsert instead of duplicating.
   const attemptId = useMemo(
     () => (typeof crypto !== "undefined" ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
     [done],
   );
+
+  const { data: completedDays } = useQuery({
+    queryKey: ["completed-days", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("quiz_attempts")
+        .select("quiz_slug,score,total")
+        .eq("user_id", user!.id)
+        .like("quiz_slug", "daily-day-%");
+      const map = new Map<number, number>();
+      for (const a of data ?? []) {
+        const m = a.quiz_slug.match(/^daily-day-(\d+)$/);
+        if (!m) continue;
+        const day = Number(m[1]);
+        const pct = Math.round((a.score / Math.max(a.total, 1)) * 100);
+        map.set(day, Math.max(map.get(day) ?? 0, pct));
+      }
+      return map;
+    },
+  });
 
   const q = questions[i];
   const progress = ((i + (picked !== null ? 1 : 0)) / questions.length) * 100;
@@ -143,16 +163,70 @@ function QuizzesPage() {
   return (
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Civic Quizzes</div>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">Test your Katiba IQ</h1>
           <p className="mt-3 max-w-xl text-muted-foreground">
-            Earn XP, build streaks, climb the leaderboard.
+            Take the 30-day civic challenge or jump into a classic quiz. Earn XP, build streaks, and learn something new every day.
           </p>
         </div>
       </section>
 
+      {/* 30-Day Challenge */}
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-flag-green/10 px-3 py-1 text-xs font-semibold text-flag-green">
+              <Calendar className="h-3.5 w-3.5" /> 30-Day Civic Challenge
+            </div>
+            <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">A month of Katiba, one day at a time</h2>
+            <p className="mt-1 text-sm text-muted-foreground">5 questions per day · up to 100 XP daily · 3,000 XP total.</p>
+          </div>
+          {user && completedDays && (
+            <div className="hidden text-right sm:block">
+              <div className="font-display text-2xl font-bold text-flag-green">{completedDays.size}/30</div>
+              <div className="text-xs text-muted-foreground">days attempted</div>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6">
+          {dailyQuizzes.map((d) => {
+            const pct = completedDays?.get(d.day);
+            return (
+              <Link
+                key={d.day}
+                to="/quizzes/day/$day"
+                params={{ day: String(d.day) }}
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all hover:border-flag-green hover:shadow-glow"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-xs font-bold text-muted-foreground">DAY {d.day}</span>
+                  {pct !== undefined && (
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
+                        pct >= 80 ? "bg-flag-green/15 text-flag-green" : "bg-amber-500/15 text-amber-700",
+                      )}
+                    >
+                      {pct}%
+                    </span>
+                  )}
+                </div>
+                <div className="mt-2 font-display text-sm font-semibold leading-snug">{d.theme}</div>
+                <div className="mt-3 text-[11px] text-muted-foreground">{d.questions.length} Qs</div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Classic Quiz */}
       <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-6">
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-red">Classic quiz</div>
+          <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Katiba basics — 10 questions</h2>
+        </div>
         <div className="rounded-3xl border border-border bg-card p-6 card-elevated sm:p-10">
           {!done ? (
             <>
@@ -175,6 +249,7 @@ function QuizzesPage() {
                   transition={{ duration: 0.25 }}
                   className="mt-8"
                 >
+
                   <h2 className="font-display text-2xl font-semibold sm:text-3xl">{q.q}</h2>
                   <div className="mt-6 grid gap-3">
                     {q.options.map((opt, idx) => {
