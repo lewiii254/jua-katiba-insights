@@ -12,7 +12,11 @@ export const Route = createFileRoute("/learn")({
   head: () => ({
     meta: [
       { title: "Learn — Jua Katiba" },
-      { name: "description", content: "Deep-dive lessons on the Constitution of Kenya, devolution, elections and citizen responsibilities." },
+      {
+        name: "description",
+        content:
+          "Deep-dive lessons on the Constitution of Kenya, devolution, elections and citizen responsibilities.",
+      },
     ],
   }),
   component: LearnPage,
@@ -46,12 +50,17 @@ function LearnPage() {
       <section className="relative overflow-hidden border-b border-border/60 bg-hero-radial">
         <div className="absolute inset-0 pattern-kente opacity-[0.05]" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Learn</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+            Learn
+          </div>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl lg:text-6xl">
-            Pick a path.<br className="hidden sm:block" /> Build your civic mind.
+            Pick a path.
+            <br className="hidden sm:block" /> Build your civic mind.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
-            {tracks.length} curated tracks, {totalLessons} in-depth lessons, with expandable sections, plain-English explanations and key takeaways — all anchored in the Constitution.
+            {tracks.length} curated tracks, {totalLessons} in-depth lessons, with expandable
+            sections, plain-English explanations and key takeaways — all anchored in the
+            Constitution.
           </p>
           <div className="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
@@ -62,7 +71,8 @@ function LearnPage() {
             </span>
             {user && (
               <span className="inline-flex items-center gap-1.5">
-                <Trophy className="h-4 w-4 text-flag-red" /> {completedLessons}/{totalLessons} completed
+                <Trophy className="h-4 w-4 text-flag-red" /> {completedLessons}/{totalLessons}{" "}
+                completed
               </span>
             )}
           </div>
@@ -87,7 +97,9 @@ function LearnPage() {
                   params={{ trackSlug: t.slug }}
                   className="group flex h-full flex-col rounded-3xl border border-border bg-card p-6 text-left card-elevated"
                 >
-                  <div className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${t.color} text-white shadow-lg`}>
+                  <div
+                    className={`grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${t.color} text-white shadow-lg`}
+                  >
                     <t.icon className="h-6 w-6" />
                   </div>
                   <h3 className="mt-5 font-display text-xl font-semibold">{t.title}</h3>
@@ -98,7 +110,8 @@ function LearnPage() {
                         <BookOpen className="h-3.5 w-3.5" /> {t.lessons.length} lessons
                       </span>
                       <span className="inline-flex items-center gap-1 font-semibold text-flag-green">
-                        {pct > 0 ? `${pct}%` : "Start"} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        {pct > 0 ? `${pct}%` : "Start"}{" "}
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                       </span>
                     </div>
                     {pct > 0 && <Progress value={pct} className="mt-3 h-1.5" />}

@@ -1,7 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, BookOpen, CheckCircle2, ChevronDown, Circle, Clock, Lock, Sparkles, Target } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  ChevronDown,
+  Circle,
+  Clock,
+  Lock,
+  Sparkles,
+  Target,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
@@ -72,10 +82,12 @@ function TrackDetailPage() {
   const saveProgress = useMutation({
     mutationFn: async ({ slug, completed }: { slug: string; completed: boolean }) => {
       if (!user) throw new Error("Sign in to save progress");
-      const { error } = await supabase.from("lesson_progress").upsert(
-        { user_id: user.id, lesson_slug: slug, completed, progress: completed ? 100 : 50 },
-        { onConflict: "user_id,lesson_slug" },
-      );
+      const { error } = await supabase
+        .from("lesson_progress")
+        .upsert(
+          { user_id: user.id, lesson_slug: slug, completed, progress: completed ? 100 : 50 },
+          { onConflict: "user_id,lesson_slug" },
+        );
       if (error) throw error;
     },
     onSuccess: (_d, v) => {
@@ -100,10 +112,15 @@ function TrackDetailPage() {
 
   return (
     <SiteShell>
-      <section className={`relative overflow-hidden border-b border-border/60 bg-gradient-to-br ${track.color} text-white`}>
+      <section
+        className={`relative overflow-hidden border-b border-border/60 bg-gradient-to-br ${track.color} text-white`}
+      >
         <div className="absolute inset-0 pattern-kente opacity-15" />
         <div className="relative mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-          <Link to="/learn" className="inline-flex items-center gap-1.5 text-sm text-white/85 hover:text-white">
+          <Link
+            to="/learn"
+            className="inline-flex items-center gap-1.5 text-sm text-white/85 hover:text-white"
+          >
             <ArrowLeft className="h-4 w-4" /> All tracks
           </Link>
           <div className="mt-4 flex items-center gap-4">
@@ -111,7 +128,9 @@ function TrackDetailPage() {
               <track.icon className="h-7 w-7" />
             </div>
             <div>
-              <div className="text-xs font-semibold uppercase tracking-widest text-white/80">Learning track</div>
+              <div className="text-xs font-semibold uppercase tracking-widest text-white/80">
+                Learning track
+              </div>
               <h1 className="font-display text-3xl font-bold sm:text-4xl">{track.title}</h1>
             </div>
           </div>
@@ -121,7 +140,8 @@ function TrackDetailPage() {
               <BookOpen className="h-3.5 w-3.5" /> {track.lessons.length} lessons
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 backdrop-blur">
-              <Sparkles className="h-3.5 w-3.5 text-gold" /> +{track.lessons.length * 10} XP available
+              <Sparkles className="h-3.5 w-3.5 text-gold" /> +{track.lessons.length * 10} XP
+              available
             </span>
             {user && (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 backdrop-blur">
@@ -140,7 +160,9 @@ function TrackDetailPage() {
               <Lock className="h-4 w-4" /> Sign in to save your progress and earn XP as you learn.
             </span>
             <Link to="/auth" search={{ redirect: `/learn/${track.slug}` }}>
-              <Button size="sm" className="rounded-full">Sign in</Button>
+              <Button size="sm" className="rounded-full">
+                Sign in
+              </Button>
             </Link>
           </div>
         </section>
@@ -172,7 +194,9 @@ function TrackDetailPage() {
                       <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                         Lesson {idx + 1} of {track.lessons.length}
                       </div>
-                      <h2 className="mt-1 font-display text-2xl font-bold sm:text-3xl">{lesson.title}</h2>
+                      <h2 className="mt-1 font-display text-2xl font-bold sm:text-3xl">
+                        {lesson.title}
+                      </h2>
                       <p className="mt-2 text-muted-foreground">{lesson.summary}</p>
                       <div className="mt-4 flex flex-wrap gap-2 text-xs">
                         <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1">
@@ -180,7 +204,10 @@ function TrackDetailPage() {
                         </span>
                         <span className="rounded-full bg-muted px-2.5 py-1">{lesson.level}</span>
                         {lesson.articles.map((a: string) => (
-                          <span key={a} className="rounded-full bg-flag-green/10 px-2.5 py-1 font-medium text-flag-green">
+                          <span
+                            key={a}
+                            className="rounded-full bg-flag-green/10 px-2.5 py-1 font-medium text-flag-green"
+                          >
                             {a}
                           </span>
                         ))}
@@ -205,7 +232,10 @@ function TrackDetailPage() {
                         >
                           <span className="font-display font-semibold">{section.heading}</span>
                           <ChevronDown
-                            className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", isOpen && "rotate-180")}
+                            className={cn(
+                              "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
+                              isOpen && "rotate-180",
+                            )}
                           />
                         </button>
                         <AnimatePresence initial={false}>
@@ -229,7 +259,9 @@ function TrackDetailPage() {
                 </div>
 
                 <div className="border-t border-border/60 bg-muted/30 p-6 sm:p-8">
-                  <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Key takeaways</div>
+                  <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+                    Key takeaways
+                  </div>
                   <ul className="mt-3 space-y-2 text-sm">
                     {lesson.takeaways.map((t: string) => (
                       <li key={t} className="flex items-start gap-2.5">
@@ -272,8 +304,12 @@ function TrackDetailPage() {
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6">
           <div>
-            <div className="font-display text-lg font-semibold">Ready to test what you've learned?</div>
-            <p className="text-sm text-muted-foreground">Take a daily quiz and earn XP toward your streak.</p>
+            <div className="font-display text-lg font-semibold">
+              Ready to test what you've learned?
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Take a daily quiz and earn XP toward your streak.
+            </p>
           </div>
           <Link to="/quizzes">
             <Button className="rounded-full">Go to quizzes</Button>

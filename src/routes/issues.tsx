@@ -7,19 +7,58 @@ export const Route = createFileRoute("/issues")({
   head: () => ({
     meta: [
       { title: "Current Issues — Jua Katiba" },
-      { name: "description", content: "Civic news, analysis and explainers on the issues shaping Kenya." },
+      {
+        name: "description",
+        content: "Civic news, analysis and explainers on the issues shaping Kenya.",
+      },
     ],
   }),
   component: IssuesPage,
 });
 
 const issues = [
-  { tag: "Public Finance", title: "County Budget 2025/26: What changed and why", date: "Today", read: "5 min", tone: "from-flag-green to-emerald-600" },
-  { tag: "Elections", title: "IEBC reconstitution: timelines & implications", date: "Yesterday", read: "7 min", tone: "from-amber-500 to-gold" },
-  { tag: "Bill of Rights", title: "The right to protest after Gen-Z's wave of activism", date: "2 days ago", read: "8 min", tone: "from-flag-red to-rose-600" },
-  { tag: "Devolution", title: "Healthcare devolution: county wins and gaps", date: "3 days ago", read: "6 min", tone: "from-indigo-500 to-flag-green" },
-  { tag: "Digital Rights", title: "Data Protection Act: what every Kenyan should know", date: "1 week ago", read: "10 min", tone: "from-flag-green to-amber-500" },
-  { tag: "Public Participation", title: "How to write a memorandum that moves Parliament", date: "1 week ago", read: "12 min", tone: "from-gold to-flag-red" },
+  {
+    tag: "Public Finance",
+    title: "County Budget 2025/26: What changed and why",
+    date: "Today",
+    read: "5 min",
+    tone: "from-flag-green to-emerald-600",
+  },
+  {
+    tag: "Elections",
+    title: "IEBC reconstitution: timelines & implications",
+    date: "Yesterday",
+    read: "7 min",
+    tone: "from-amber-500 to-gold",
+  },
+  {
+    tag: "Bill of Rights",
+    title: "The right to protest after Gen-Z's wave of activism",
+    date: "2 days ago",
+    read: "8 min",
+    tone: "from-flag-red to-rose-600",
+  },
+  {
+    tag: "Devolution",
+    title: "Healthcare devolution: county wins and gaps",
+    date: "3 days ago",
+    read: "6 min",
+    tone: "from-indigo-500 to-flag-green",
+  },
+  {
+    tag: "Digital Rights",
+    title: "Data Protection Act: what every Kenyan should know",
+    date: "1 week ago",
+    read: "10 min",
+    tone: "from-flag-green to-amber-500",
+  },
+  {
+    tag: "Public Participation",
+    title: "How to write a memorandum that moves Parliament",
+    date: "1 week ago",
+    read: "12 min",
+    tone: "from-gold to-flag-red",
+  },
 ];
 
 function IssuesPage() {
@@ -27,7 +66,9 @@ function IssuesPage() {
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Current Issues</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+            Current Issues
+          </div>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">Civic news, decoded.</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
             Every story tied to the Constitution and the law it lives by.

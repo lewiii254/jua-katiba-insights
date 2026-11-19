@@ -1,6 +1,15 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, Flame, Lock, RotateCcw, Trophy, XCircle, Zap } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Flame,
+  Lock,
+  RotateCcw,
+  Trophy,
+  XCircle,
+  Zap,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { SiteShell } from "@/components/site/SiteShell";
@@ -22,7 +31,10 @@ export const Route = createFileRoute("/quizzes/day/$day")({
     meta: loaderData
       ? [
           { title: `${loaderData.quiz.title} — Jua Katiba` },
-          { name: "description", content: `Day ${loaderData.quiz.day} of the 30-day civic challenge: ${loaderData.quiz.theme}.` },
+          {
+            name: "description",
+            content: `Day ${loaderData.quiz.day} of the 30-day civic challenge: ${loaderData.quiz.theme}.`,
+          },
         ]
       : [],
   }),
@@ -30,7 +42,9 @@ export const Route = createFileRoute("/quizzes/day/$day")({
     <SiteShell>
       <div className="mx-auto max-w-2xl px-4 py-24 text-center">
         <h1 className="font-display text-3xl font-bold">Day not found</h1>
-        <p className="mt-3 text-muted-foreground">The 30-day challenge runs from Day 1 to Day 30.</p>
+        <p className="mt-3 text-muted-foreground">
+          The 30-day challenge runs from Day 1 to Day 30.
+        </p>
         <Link to="/quizzes" className="mt-6 inline-block">
           <Button className="rounded-full">Back to quizzes</Button>
         </Link>
@@ -100,7 +114,10 @@ function DailyQuizPage() {
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
         <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
-          <Link to="/quizzes" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to="/quizzes"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="h-4 w-4" /> All daily quizzes
           </Link>
           <div className="mt-3 text-xs font-semibold uppercase tracking-widest text-flag-green">
@@ -201,7 +218,9 @@ function DailyQuizPage() {
                 </Button>
                 {nextDay && (
                   <Link to="/quizzes/day/$day" params={{ day: String(nextDay) }} onClick={reset}>
-                    <Button className="rounded-full" size="lg">Day {nextDay} →</Button>
+                    <Button className="rounded-full" size="lg">
+                      Day {nextDay} →
+                    </Button>
                   </Link>
                 )}
                 {!user && (
@@ -218,7 +237,9 @@ function DailyQuizPage() {
 
         {/* Day strip */}
         <div className="mt-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Jump to a day</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Jump to a day
+          </div>
           <div className="mt-3 grid grid-cols-6 gap-2 sm:grid-cols-10">
             {dailyQuizzes.map((d) => (
               <Link

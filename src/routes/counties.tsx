@@ -9,30 +9,82 @@ export const Route = createFileRoute("/counties")({
   head: () => ({
     meta: [
       { title: "Counties — Jua Katiba" },
-      { name: "description", content: "Explore all 47 counties of Kenya — governors, capitals, devolved functions." },
+      {
+        name: "description",
+        content: "Explore all 47 counties of Kenya — governors, capitals, devolved functions.",
+      },
     ],
   }),
   component: CountiesPage,
 });
 
 const counties = [
-  "Mombasa","Kwale","Kilifi","Tana River","Lamu","Taita-Taveta","Garissa","Wajir","Mandera","Marsabit",
-  "Isiolo","Meru","Tharaka-Nithi","Embu","Kitui","Machakos","Makueni","Nyandarua","Nyeri","Kirinyaga",
-  "Murang'a","Kiambu","Turkana","West Pokot","Samburu","Trans Nzoia","Uasin Gishu","Elgeyo-Marakwet","Nandi","Baringo",
-  "Laikipia","Nakuru","Narok","Kajiado","Kericho","Bomet","Kakamega","Vihiga","Bungoma","Busia",
-  "Siaya","Kisumu","Homa Bay","Migori","Kisii","Nyamira","Nairobi",
+  "Mombasa",
+  "Kwale",
+  "Kilifi",
+  "Tana River",
+  "Lamu",
+  "Taita-Taveta",
+  "Garissa",
+  "Wajir",
+  "Mandera",
+  "Marsabit",
+  "Isiolo",
+  "Meru",
+  "Tharaka-Nithi",
+  "Embu",
+  "Kitui",
+  "Machakos",
+  "Makueni",
+  "Nyandarua",
+  "Nyeri",
+  "Kirinyaga",
+  "Murang'a",
+  "Kiambu",
+  "Turkana",
+  "West Pokot",
+  "Samburu",
+  "Trans Nzoia",
+  "Uasin Gishu",
+  "Elgeyo-Marakwet",
+  "Nandi",
+  "Baringo",
+  "Laikipia",
+  "Nakuru",
+  "Narok",
+  "Kajiado",
+  "Kericho",
+  "Bomet",
+  "Kakamega",
+  "Vihiga",
+  "Bungoma",
+  "Busia",
+  "Siaya",
+  "Kisumu",
+  "Homa Bay",
+  "Migori",
+  "Kisii",
+  "Nyamira",
+  "Nairobi",
 ];
 
 function CountiesPage() {
   const [q, setQ] = useState("");
-  const filtered = useMemo(() => counties.filter((c) => c.toLowerCase().includes(q.toLowerCase())), [q]);
+  const filtered = useMemo(
+    () => counties.filter((c) => c.toLowerCase().includes(q.toLowerCase())),
+    [q],
+  );
 
   return (
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Counties</div>
-          <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">All 47 counties of Kenya</h1>
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+            Counties
+          </div>
+          <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">
+            All 47 counties of Kenya
+          </h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
             Devolution at a glance — the units of government closest to you.
           </p>
@@ -66,7 +118,9 @@ function CountiesPage() {
               </div>
               <div>
                 <div className="font-display text-sm font-semibold">{c}</div>
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">County</div>
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  County
+                </div>
               </div>
             </motion.button>
           ))}

@@ -40,10 +40,13 @@ Deno.serve(async (req) => {
       });
     }
     if (res.status === 402) {
-      return new Response(JSON.stringify({ error: "AI credits exhausted. Add credits in Lovable Cloud." }), {
-        status: 402,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ error: "AI credits exhausted. Add credits in Lovable Cloud." }),
+        {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
     }
     if (!res.ok) {
       const text = await res.text();

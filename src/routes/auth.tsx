@@ -55,7 +55,10 @@ function AuthPage() {
       {/* Right form */}
       <div className="flex flex-col">
         <div className="flex items-center justify-between p-6">
-          <Link to="/" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="h-4 w-4" /> Back home
           </Link>
         </div>
@@ -66,7 +69,9 @@ function AuthPage() {
           className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 pb-12"
         >
           <h1 className="font-display text-3xl font-bold">Karibu 👋</h1>
-          <p className="mt-2 text-muted-foreground">Sign in to track your progress, earn XP and unlock badges.</p>
+          <p className="mt-2 text-muted-foreground">
+            Sign in to track your progress, earn XP and unlock badges.
+          </p>
 
           <GoogleButton />
 
@@ -112,14 +117,30 @@ function SignInForm() {
     <form onSubmit={submit} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input
+          id="email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input
+          id="password"
+          type="password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
       <Button type="submit" className="w-full rounded-full" size="lg" disabled={loading}>
-        {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
+        {loading ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Mail className="mr-2 h-4 w-4" />
+        )}
         Sign in
       </Button>
     </form>
@@ -152,11 +173,23 @@ function SignUpForm() {
     <form onSubmit={submit} className="space-y-4">
       <div className="space-y-1.5">
         <Label htmlFor="name">Display name</Label>
-        <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Wanjiku" />
+        <Input
+          id="name"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Wanjiku"
+        />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="email2">Email</Label>
-        <Input id="email2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input
+          id="email2"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="password2">Password</Label>
@@ -191,12 +224,21 @@ function GoogleButton() {
     // if redirected, browser leaves — nothing else to do
   };
   return (
-    <Button variant="outline" size="lg" className="mt-6 w-full rounded-full" onClick={onClick} disabled={loading}>
+    <Button
+      variant="outline"
+      size="lg"
+      className="mt-6 w-full rounded-full"
+      onClick={onClick}
+      disabled={loading}
+    >
       {loading ? (
         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
       ) : (
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-          <path fill="#EA4335" d="M12 11v3.2h4.5c-.2 1.2-1.4 3.5-4.5 3.5-2.7 0-4.9-2.2-4.9-5s2.2-5 4.9-5c1.5 0 2.6.7 3.2 1.2l2.2-2.1C16 5.6 14.2 4.8 12 4.8 7.9 4.8 4.6 8.1 4.6 12.2S7.9 19.6 12 19.6c6.9 0 7.5-6.4 6.9-9.6H12z" />
+          <path
+            fill="#EA4335"
+            d="M12 11v3.2h4.5c-.2 1.2-1.4 3.5-4.5 3.5-2.7 0-4.9-2.2-4.9-5s2.2-5 4.9-5c1.5 0 2.6.7 3.2 1.2l2.2-2.1C16 5.6 14.2 4.8 12 4.8 7.9 4.8 4.6 8.1 4.6 12.2S7.9 19.6 12 19.6c6.9 0 7.5-6.4 6.9-9.6H12z"
+          />
         </svg>
       )}
       Continue with Google

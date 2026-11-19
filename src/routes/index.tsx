@@ -59,10 +59,26 @@ const lessons = [
 ];
 
 const highlights = [
-  { num: "Art. 1", title: "Sovereignty of the People", text: "All sovereign power belongs to the people of Kenya." },
-  { num: "Art. 10", title: "National Values", text: "Patriotism, rule of law, democracy and participation of the people." },
-  { num: "Art. 27", title: "Equality & Non-Discrimination", text: "Every person is equal before the law and has equal protection." },
-  { num: "Art. 174", title: "Objects of Devolution", text: "To give powers of self-governance to the people and enhance participation." },
+  {
+    num: "Art. 1",
+    title: "Sovereignty of the People",
+    text: "All sovereign power belongs to the people of Kenya.",
+  },
+  {
+    num: "Art. 10",
+    title: "National Values",
+    text: "Patriotism, rule of law, democracy and participation of the people.",
+  },
+  {
+    num: "Art. 27",
+    title: "Equality & Non-Discrimination",
+    text: "Every person is equal before the law and has equal protection.",
+  },
+  {
+    num: "Art. 174",
+    title: "Objects of Devolution",
+    text: "To give powers of self-governance to the people and enhance participation.",
+  },
 ];
 
 const trending = [
@@ -101,12 +117,28 @@ function Home() {
 
 function HowItWorks() {
   const steps = [
-    { n: "01", title: "Learn", text: "Pick a track. Each lesson has expandable sections, real-world examples and key takeaways." },
-    { n: "02", title: "Practice", text: "Take the 30-day civic challenge — 5 questions a day, themed by topic. Streaks unlock XP." },
-    { n: "03", title: "Act", text: "Use the toolkit: petition templates, county budget timelines, public participation guides." },
+    {
+      n: "01",
+      title: "Learn",
+      text: "Pick a track. Each lesson has expandable sections, real-world examples and key takeaways.",
+    },
+    {
+      n: "02",
+      title: "Practice",
+      text: "Take the 30-day civic challenge — 5 questions a day, themed by topic. Streaks unlock XP.",
+    },
+    {
+      n: "03",
+      title: "Act",
+      text: "Use the toolkit: petition templates, county budget timelines, public participation guides.",
+    },
   ];
   return (
-    <Section eyebrow="How it works" title="From confused citizen to confident participant" desc="Three steps, no jargon, built for daily use.">
+    <Section
+      eyebrow="How it works"
+      title="From confused citizen to confident participant"
+      desc="Three steps, no jargon, built for daily use."
+    >
       <div className="grid gap-5 md:grid-cols-3">
         {steps.map((s, i) => (
           <motion.div
@@ -142,17 +174,24 @@ function DailyChallengeTeaser() {
             <div className="inline-flex items-center gap-2 rounded-full bg-flag-green/10 px-3 py-1 text-xs font-semibold text-flag-green">
               <Sparkles className="h-3.5 w-3.5" /> New · 30-Day Civic Challenge
             </div>
-            <h3 className="mt-4 font-display text-3xl font-bold sm:text-4xl">A month of Katiba, one day at a time.</h3>
+            <h3 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+              A month of Katiba, one day at a time.
+            </h3>
             <p className="mt-3 max-w-xl text-muted-foreground">
-              30 themed days. 150 questions. Sovereignty, devolution, the Bill of Rights, public finance, public participation — covered.
-              Earn up to 3,000 XP and finish the month genuinely informed.
+              30 themed days. 150 questions. Sovereignty, devolution, the Bill of Rights, public
+              finance, public participation — covered. Earn up to 3,000 XP and finish the month
+              genuinely informed.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link to="/quizzes/day/$day" params={{ day: "1" }}>
-                <Button size="lg" className="rounded-full px-6">Start Day 1 <ArrowRight className="ml-1 h-4 w-4" /></Button>
+                <Button size="lg" className="rounded-full px-6">
+                  Start Day 1 <ArrowRight className="ml-1 h-4 w-4" />
+                </Button>
               </Link>
               <Link to="/quizzes">
-                <Button size="lg" variant="outline" className="rounded-full px-6">See all 30 days</Button>
+                <Button size="lg" variant="outline" className="rounded-full px-6">
+                  See all 30 days
+                </Button>
               </Link>
             </div>
           </div>
@@ -174,12 +213,28 @@ function DailyChallengeTeaser() {
 
 function Testimonials() {
   const quotes = [
-    { name: "Wanjiru, 22", role: "University student, Nairobi", text: "I'd read Article 43 a hundred times in class. Five minutes here and I finally got what 'progressive realisation' means." },
-    { name: "Otieno, 34", role: "Boda boda rider, Kisumu", text: "I knew I had rights when arrested. I didn't know I had to be in court within 24 hours. That changed how I move." },
-    { name: "Achieng, 41", role: "Public participation officer", text: "I use the toolkit lessons in my ward forums. People show up better prepared. The county budget hearings improved." },
+    {
+      name: "Wanjiru, 22",
+      role: "University student, Nairobi",
+      text: "I'd read Article 43 a hundred times in class. Five minutes here and I finally got what 'progressive realisation' means.",
+    },
+    {
+      name: "Otieno, 34",
+      role: "Boda boda rider, Kisumu",
+      text: "I knew I had rights when arrested. I didn't know I had to be in court within 24 hours. That changed how I move.",
+    },
+    {
+      name: "Achieng, 41",
+      role: "Public participation officer",
+      text: "I use the toolkit lessons in my ward forums. People show up better prepared. The county budget hearings improved.",
+    },
   ];
   return (
-    <Section eyebrow="What learners say" title="Built for Kenyans, by the questions Kenyans actually ask" desc="Plain language, real cases, no political angle.">
+    <Section
+      eyebrow="What learners say"
+      title="Built for Kenyans, by the questions Kenyans actually ask"
+      desc="Plain language, real cases, no political angle."
+    >
       <div className="grid gap-5 md:grid-cols-3">
         {quotes.map((q, i) => (
           <motion.figure
@@ -224,8 +279,8 @@ function Hero() {
             Shape your Kenya.
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            Bite-sized lessons, gamified quizzes and an AI civic assistant that turn the Constitution of Kenya 2010 into
-            something you actually understand — and use.
+            Bite-sized lessons, gamified quizzes and an AI civic assistant that turn the
+            Constitution of Kenya 2010 into something you actually understand — and use.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/learn">
@@ -430,7 +485,9 @@ function FeaturedLessons() {
             whileHover={{ y: -4 }}
             className="group relative overflow-hidden rounded-3xl border border-border bg-card p-6 card-elevated"
           >
-            <div className={`mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${l.accent} text-white shadow-lg`}>
+            <div
+              className={`mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br ${l.accent} text-white shadow-lg`}
+            >
               <l.icon className="h-6 w-6" />
             </div>
             <h3 className="font-display text-lg font-semibold">{l.title}</h3>
@@ -473,7 +530,10 @@ function ConstitutionHighlights() {
             <div>
               <h3 className="font-display text-lg font-semibold">{h.title}</h3>
               <p className="mt-1.5 text-sm text-muted-foreground">{h.text}</p>
-              <Link to="/constitution" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-flag-green hover:underline">
+              <Link
+                to="/constitution"
+                className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-flag-green hover:underline"
+              >
                 Read article <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
@@ -499,9 +559,12 @@ function DailyFact() {
             <Flame className="h-10 w-10 text-white" />
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-widest text-white/80">Daily Civic Fact</div>
+            <div className="text-xs font-semibold uppercase tracking-widest text-white/80">
+              Daily Civic Fact
+            </div>
             <h3 className="mt-2 font-display text-2xl font-bold sm:text-3xl">
-              "The Constitution is the supreme law of the Republic and binds all persons and all State organs."
+              "The Constitution is the supreme law of the Republic and binds all persons and all
+              State organs."
             </h3>
             <p className="mt-3 text-sm text-white/90">— Article 2(1), Constitution of Kenya 2010</p>
           </div>
@@ -549,7 +612,8 @@ function CTA() {
         <div className="relative">
           <h2 className="font-display text-3xl font-bold sm:text-5xl">Become a Katiba citizen.</h2>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            Join thousands of Kenyans learning their rights, tracking county action, and building a stronger democracy.
+            Join thousands of Kenyans learning their rights, tracking county action, and building a
+            stronger democracy.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link to="/dashboard">
@@ -590,7 +654,9 @@ function Section({
   return (
     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
       <div className="mb-10 max-w-2xl">
-        <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">{eyebrow}</div>
+        <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+          {eyebrow}
+        </div>
         <h2 className="mt-2 font-display text-3xl font-bold sm:text-4xl">{title}</h2>
         <p className="mt-3 text-muted-foreground">{desc}</p>
       </div>

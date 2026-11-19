@@ -13,7 +13,8 @@ export function Footer() {
             <span className="font-display text-lg font-bold">Jua Katiba</span>
           </div>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            A modern civic education platform empowering every Kenyan to know, live and defend the Constitution.
+            A modern civic education platform empowering every Kenyan to know, live and defend the
+            Constitution.
           </p>
         </div>
 
@@ -58,7 +59,9 @@ export function Footer() {
 function FooterCol({ title, links }: { title: string; links: [string, string][] }) {
   return (
     <div>
-      <h4 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground">{title}</h4>
+      <h4 className="font-display text-sm font-semibold uppercase tracking-wider text-foreground">
+        {title}
+      </h4>
       <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
         {links.map(([label, to]) => (
           <li key={label}>

@@ -16,7 +16,11 @@ export const Route = createFileRoute("/quizzes")({
   head: () => ({
     meta: [
       { title: "Civic Quizzes — Jua Katiba" },
-      { name: "description", content: "Gamified quizzes on the Constitution of Kenya, devolution, and the Bill of Rights." },
+      {
+        name: "description",
+        content:
+          "Gamified quizzes on the Constitution of Kenya, devolution, and the Bill of Rights.",
+      },
     ],
   }),
   component: QuizzesPage,
@@ -57,7 +61,8 @@ const questions = [
     q: "Which body is responsible for conducting elections in Kenya?",
     options: ["KNCHR", "IEBC", "EACC", "JSC"],
     answer: 1,
-    explain: "The Independent Electoral and Boundaries Commission (IEBC) is established by Article 88.",
+    explain:
+      "The Independent Electoral and Boundaries Commission (IEBC) is established by Article 88.",
   },
   {
     q: "What is the term limit of a Kenyan President?",
@@ -69,7 +74,8 @@ const questions = [
     q: "Which article guarantees freedom of expression?",
     options: ["Article 27", "Article 33", "Article 43", "Article 50"],
     answer: 1,
-    explain: "Article 33 protects freedom of expression, with limits on hate speech and incitement.",
+    explain:
+      "Article 33 protects freedom of expression, with limits on hate speech and incitement.",
   },
   {
     q: "How many members make up a county assembly's elected ward representatives?",
@@ -164,10 +170,13 @@ function QuizzesPage() {
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Civic Quizzes</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+            Civic Quizzes
+          </div>
           <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl">Test your Katiba IQ</h1>
           <p className="mt-3 max-w-xl text-muted-foreground">
-            Take the 30-day civic challenge or jump into a classic quiz. Earn XP, build streaks, and learn something new every day.
+            Take the 30-day civic challenge or jump into a classic quiz. Earn XP, build streaks, and
+            learn something new every day.
           </p>
         </div>
       </section>
@@ -179,12 +188,18 @@ function QuizzesPage() {
             <div className="inline-flex items-center gap-2 rounded-full bg-flag-green/10 px-3 py-1 text-xs font-semibold text-flag-green">
               <Calendar className="h-3.5 w-3.5" /> 30-Day Civic Challenge
             </div>
-            <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">A month of Katiba, one day at a time</h2>
-            <p className="mt-1 text-sm text-muted-foreground">5 questions per day · up to 100 XP daily · 3,000 XP total.</p>
+            <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">
+              A month of Katiba, one day at a time
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              5 questions per day · up to 100 XP daily · 3,000 XP total.
+            </p>
           </div>
           {user && completedDays && (
             <div className="hidden text-right sm:block">
-              <div className="font-display text-2xl font-bold text-flag-green">{completedDays.size}/30</div>
+              <div className="font-display text-2xl font-bold text-flag-green">
+                {completedDays.size}/30
+              </div>
               <div className="text-xs text-muted-foreground">days attempted</div>
             </div>
           )}
@@ -201,20 +216,28 @@ function QuizzesPage() {
                 className="group relative overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all hover:border-flag-green hover:shadow-glow"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-display text-xs font-bold text-muted-foreground">DAY {d.day}</span>
+                  <span className="font-display text-xs font-bold text-muted-foreground">
+                    DAY {d.day}
+                  </span>
                   {pct !== undefined && (
                     <span
                       className={cn(
                         "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
-                        pct >= 80 ? "bg-flag-green/15 text-flag-green" : "bg-amber-500/15 text-amber-700",
+                        pct >= 80
+                          ? "bg-flag-green/15 text-flag-green"
+                          : "bg-amber-500/15 text-amber-700",
                       )}
                     >
                       {pct}%
                     </span>
                   )}
                 </div>
-                <div className="mt-2 font-display text-sm font-semibold leading-snug">{d.theme}</div>
-                <div className="mt-3 text-[11px] text-muted-foreground">{d.questions.length} Qs</div>
+                <div className="mt-2 font-display text-sm font-semibold leading-snug">
+                  {d.theme}
+                </div>
+                <div className="mt-3 text-[11px] text-muted-foreground">
+                  {d.questions.length} Qs
+                </div>
               </Link>
             );
           })}
@@ -224,8 +247,12 @@ function QuizzesPage() {
       {/* Classic Quiz */}
       <section className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mb-6">
-          <div className="text-xs font-semibold uppercase tracking-widest text-flag-red">Classic quiz</div>
-          <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">Katiba basics — 10 questions</h2>
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-red">
+            Classic quiz
+          </div>
+          <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">
+            Katiba basics — 10 questions
+          </h2>
         </div>
         <div className="rounded-3xl border border-border bg-card p-6 card-elevated sm:p-10">
           {!done ? (
@@ -249,7 +276,6 @@ function QuizzesPage() {
                   transition={{ duration: 0.25 }}
                   className="mt-8"
                 >
-
                   <h2 className="font-display text-2xl font-semibold sm:text-3xl">{q.q}</h2>
                   <div className="mt-6 grid gap-3">
                     {q.options.map((opt, idx) => {
@@ -315,7 +341,9 @@ function QuizzesPage() {
                 </Button>
                 {user ? (
                   <Link to="/dashboard">
-                    <Button className="rounded-full" size="lg">View dashboard</Button>
+                    <Button className="rounded-full" size="lg">
+                      View dashboard
+                    </Button>
                   </Link>
                 ) : (
                   <Link to="/auth" search={{ redirect: "/quizzes" }}>

@@ -39,7 +39,9 @@ export function Navbar() {
           </div>
           <div className="leading-tight">
             <div className="font-display text-lg font-bold">Jua Katiba</div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Know your constitution</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              Know your constitution
+            </div>
           </div>
         </Link>
 
@@ -85,7 +87,12 @@ export function Navbar() {
               <Button className="rounded-full">Sign in</Button>
             </Link>
           )}
-          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen((o) => !o)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setOpen((o) => !o)}
+          >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>

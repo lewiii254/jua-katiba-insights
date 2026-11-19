@@ -14,7 +14,10 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
       { title: "Dashboard — Jua Katiba" },
-      { name: "description", content: "Your civic learning dashboard, progress, and AI assistant." },
+      {
+        name: "description",
+        content: "Your civic learning dashboard, progress, and AI assistant.",
+      },
     ],
   }),
   component: Dashboard,
@@ -23,7 +26,10 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 function Dashboard() {
   const { user } = useAuth();
   const [msgs, setMsgs] = useState<{ role: "user" | "ai"; text: string }[]>([
-    { role: "ai", text: "Habari! I'm your civic assistant. Ask me anything about the Constitution of Kenya." },
+    {
+      role: "ai",
+      text: "Habari! I'm your civic assistant. Ask me anything about the Constitution of Kenya.",
+    },
   ]);
   const [input, setInput] = useState("");
 
@@ -64,9 +70,10 @@ function Dashboard() {
 
   const totalXp = (attempts ?? []).reduce((s, a) => s + (a.xp_earned ?? 0), 0);
   const lessonsDone = (lessons ?? []).filter((l) => l.completed).length;
-  const overallPct = lessons && lessons.length > 0
-    ? Math.round((lessonsDone / Math.max(lessons.length, 8)) * 100)
-    : 0;
+  const overallPct =
+    lessons && lessons.length > 0
+      ? Math.round((lessonsDone / Math.max(lessons.length, 8)) * 100)
+      : 0;
   const bestScore = (attempts ?? []).reduce(
     (m, a) => Math.max(m, Math.round((a.score / Math.max(a.total, 1)) * 100)),
     0,
@@ -103,7 +110,10 @@ function Dashboard() {
         const err = await res.json().catch(() => ({ error: "Request failed" }));
         setMsgs((m) => {
           const copy = [...m];
-          copy[copy.length - 1] = { role: "ai", text: `⚠️ ${err.error ?? "Something went wrong."}` };
+          copy[copy.length - 1] = {
+            role: "ai",
+            text: `⚠️ ${err.error ?? "Something went wrong."}`,
+          };
           return copy;
         });
         return;
@@ -155,20 +165,44 @@ function Dashboard() {
     <SiteShell>
       <section className="border-b border-border/60 bg-hero-radial">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-12 sm:px-6 lg:px-8">
-          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">Dashboard</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-flag-green">
+            Dashboard
+          </div>
           <h1 className="font-display text-3xl font-bold sm:text-4xl">Karibu, {greetingName} 👋</h1>
           <p className="text-muted-foreground">
-            {profile?.streak ? `You're on a ${profile.streak}-day streak.` : "Take a quiz to start your streak."}
+            {profile?.streak
+              ? `You're on a ${profile.streak}-day streak.`
+              : "Take a quiz to start your streak."}
           </p>
         </div>
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat icon={Flame} label="Streak" value={`${profile?.streak ?? 0} days`} tone="from-flag-red to-rose-600" />
-          <Stat icon={TrendingUp} label="Total XP" value={totalXp.toLocaleString()} tone="from-flag-green to-emerald-600" />
-          <Stat icon={BookOpen} label="Quizzes" value={`${attempts?.length ?? 0}`} tone="from-amber-500 to-gold" />
-          <Stat icon={Award} label="Best Score" value={`${bestScore}%`} tone="from-indigo-500 to-flag-green" />
+          <Stat
+            icon={Flame}
+            label="Streak"
+            value={`${profile?.streak ?? 0} days`}
+            tone="from-flag-red to-rose-600"
+          />
+          <Stat
+            icon={TrendingUp}
+            label="Total XP"
+            value={totalXp.toLocaleString()}
+            tone="from-flag-green to-emerald-600"
+          />
+          <Stat
+            icon={BookOpen}
+            label="Quizzes"
+            value={`${attempts?.length ?? 0}`}
+            tone="from-amber-500 to-gold"
+          />
+          <Stat
+            icon={Award}
+            label="Best Score"
+            value={`${bestScore}%`}
+            tone="from-indigo-500 to-flag-green"
+          />
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
@@ -192,9 +226,13 @@ function Dashboard() {
                       <div className="grid h-9 w-9 place-items-center rounded-xl bg-flag-green/10 text-flag-green">
                         <Target className="h-4 w-4" />
                       </div>
-                      <span className="font-medium capitalize">{l.lesson_slug.replace(/-/g, " ")}</span>
+                      <span className="font-medium capitalize">
+                        {l.lesson_slug.replace(/-/g, " ")}
+                      </span>
                     </div>
-                    <span className="text-xs text-muted-foreground">{l.completed ? "100%" : `${l.progress}%`}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {l.completed ? "100%" : `${l.progress}%`}
+                    </span>
                   </div>
                   <Progress value={l.completed ? 100 : l.progress} className="mt-3 h-1.5" />
                 </div>
@@ -218,14 +256,20 @@ function Dashboard() {
                       className="flex items-center justify-between rounded-xl border border-border bg-background/50 px-4 py-3 text-sm"
                     >
                       <div>
-                        <div className="font-medium capitalize">{a.quiz_slug.replace(/-/g, " ")}</div>
+                        <div className="font-medium capitalize">
+                          {a.quiz_slug.replace(/-/g, " ")}
+                        </div>
                         <div className="text-xs text-muted-foreground">
                           {new Date(a.created_at).toLocaleDateString()} · {a.score}/{a.total}
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs font-semibold text-flag-green">+{a.xp_earned} XP</span>
-                        <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium">{pct}%</span>
+                        <span className="text-xs font-semibold text-flag-green">
+                          +{a.xp_earned} XP
+                        </span>
+                        <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium">
+                          {pct}%
+                        </span>
                       </div>
                     </div>
                   );
@@ -258,7 +302,10 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="flex-1 space-y-3 overflow-y-auto p-5 text-sm" style={{ minHeight: 280 }}>
+            <div
+              className="flex-1 space-y-3 overflow-y-auto p-5 text-sm"
+              style={{ minHeight: 280 }}
+            >
               {msgs.map((m, i) => (
                 <div
                   key={i}
@@ -282,7 +329,12 @@ function Dashboard() {
                 placeholder={streaming ? "Thinking…" : "Ask about any article…"}
                 className="rounded-full"
               />
-              <Button onClick={send} disabled={streaming || !input.trim()} size="icon" className="rounded-full">
+              <Button
+                onClick={send}
+                disabled={streaming || !input.trim()}
+                size="icon"
+                className="rounded-full"
+              >
                 <Send className="h-4 w-4" />
               </Button>
             </div>
@@ -310,7 +362,9 @@ function Stat({
       animate={{ opacity: 1, y: 0 }}
       className="rounded-3xl border border-border bg-card p-5 card-elevated"
     >
-      <div className={`grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br ${tone} text-white`}>
+      <div
+        className={`grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br ${tone} text-white`}
+      >
         <Icon className="h-5 w-5" />
       </div>
       <div className="mt-4 font-display text-2xl font-bold">{value}</div>
